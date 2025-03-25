@@ -1,6 +1,4 @@
-<?php
-include 'conn.php'; ?>
- ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,8 +24,15 @@ include 'conn.php'; ?>
             <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
         </div>
 
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+                <?= $_SESSION['error']; ?>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form class="space-y-6" action="#" method="POST">
+            <form class="space-y-6" action="check_login.php" method="POST">
                 <div>
                     <label for="username" class="block text-sm/6 font-medium text-gray-900">Username</label>
                     <div class="mt-2">

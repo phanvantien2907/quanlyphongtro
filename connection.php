@@ -1,6 +1,6 @@
 <?php
 $host = "localhost";
-$database = "casestudy";
+$database = "gtpt";
 $username = "root";
 $password = "";
 
@@ -10,9 +10,6 @@ $conn = new mysqli($host, $username, $password, $database);
 // check connection
 if($conn->connect_error) {
     die("Kết nối thất bại tới database" . $conn->connect_error);
-}
-else {
-    echo "Kết nối thành công tới database";
 }
 
 ?>

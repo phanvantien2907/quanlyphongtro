@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>Register Form</title>
+    <title>Register</title>
 </head>
 
 <body>
@@ -16,7 +16,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-        <title>Register form</title>
+        <title>Register</title>
     </head>
 
     <body>
@@ -33,9 +33,24 @@
                 <img class="mx-auto h-10 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
                 <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign up to your account</h2>
             </div>
+            
+            <?php session_start(); ?>
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
+                    <?= $_SESSION['success']; ?>
+                </div>
+                <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+                    <?= $_SESSION['error']; ?>
+                </div>
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
 
             <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form class="space-y-6" action="#" method="POST">
+                <form class="space-y-6" action="check_register.php" method="POST">
                     <div>
                         <div class="flex items-center justify-between">
                             <label for="name" class="block text-sm/6 font-medium text-gray-900">Name</label>
@@ -66,7 +81,7 @@
                             <label for="confirm_password" class="block text-sm/6 font-medium text-gray-900">Confirm Password</label>
                         </div>
                         <div class="mt-2">
-                            <input type="confirm_password" name="confirm_password" id="confirm_password" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                            <input type="password" name="confirm_password" id="confirm_password" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                         </div>
                     </div>
 
