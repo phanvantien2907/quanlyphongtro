@@ -1,3 +1,38 @@
+<?php
+session_start();
+// kết nối đến csdl
+include_once '../config/connection.php';
+
+// check login
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $is_active = 1;
+
+    // query sql
+    $sql = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email' AND is_active = $is_active") or die("Lỗi truy vấn");
+    $result = mysqli_fetch_assoc($sql);
+
+
+    if ($result['is_active'] == 0) {
+        $_SESSION['error'] = "Tài khoản <b>$email</b> chưa được kích hoạt";
+        header('Location: login.php');
+        exit();
+    }
+
+    if (password_verify($password, $result['password'])) {
+        $_SESSION['user_id'] = $result['user_id'];
+        $_SESSION['name'] = $result['name'];
+        header('Location: ..\page\index.php');
+        exit();
+    } else {
+        $_SESSION['error'] = "Mật khẩu <b>$email</b> không chính xác";
+        header('Location: login.php');
+        exit();
+    }
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,14 +45,6 @@
 </head>
 
 <body>
-    <!--
-  This example requires updating your template:
-
-  ```
-  <html class="h-full bg-white">
-  <body class="h-full">
-  ```
--->
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
             <img class="mx-auto h-10 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
@@ -32,11 +59,11 @@
         <?php endif; ?>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form class="space-y-6" action="check_login.php" method="POST">
+            <form class="space-y-6" action="login.php" method="POST">
                 <div>
-                    <label for="username" class="block text-sm/6 font-medium text-gray-900">Username</label>
+                    <label for="email" class="block text-sm/6 font-medium text-gray-900">Email</label>
                     <div class="mt-2">
-                        <input type="username" name="username" id="username" autocomplete="username" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        <input type="email" name="email" id="username" autocomplete="email" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                     </div>
                 </div>
 
@@ -59,7 +86,7 @@
 
             <p class="mt-10 text-center text-sm/6 text-gray-500">
                 Not a member?
-                <a href="http://localhost/casestudy/register.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
+                <a href="../auth/register.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
             </p>
         </div>
     </div>

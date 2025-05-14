@@ -1,3 +1,48 @@
+<?php
+session_start();
+include '../config/connection.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+    $is_active = 1;
+
+    if ($password != $confirm_password) {
+        $_SESSION['error'] = "Mật khẩu không trùng khớp";
+        header('Location: register.php');
+        exit();
+    }
+
+    // check email exits
+    $check_email = $conn->query("SELECT * FROM users WHERE email = '$email'");
+
+    if ($check_email->num_rows > 0) {
+        $_SESSION['error'] = "Email <b>$email</b> đã tồn tại trong hệ thống";
+        header("Location: register.php");
+        exit();
+    }
+
+    $hassed_password = password_hash("password", PASSWORD_BCRYPT);
+    $query = "INSERT INTO users (name, password, email, is_active) VALUES ('$name', '$hassed_password', '$email', 1)";
+
+    if ($conn->query($query)) {
+        $_SESSION['success'] = "Đăng ký tài khoản $email thành công";
+        header("Location: register.php");
+        exit();
+    } else {
+        $_SESSION['error'] = "Đăng ký tài khoản $email thất bại";
+        header("Location: register.php");
+        exit();
+    }
+
+    header("Location: register.php");
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,8 +78,7 @@
                 <img class="mx-auto h-10 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
                 <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign up to your account</h2>
             </div>
-            
-            <?php session_start(); ?>
+
             <?php if (isset($_SESSION['success'])): ?>
                 <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
                     <?= $_SESSION['success']; ?>
@@ -50,7 +94,7 @@
             <?php endif; ?>
 
             <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form class="space-y-6" action="check_register.php" method="POST">
+                <form class="space-y-6" action="register.php" method="POST">
                     <div>
                         <div class="flex items-center justify-between">
                             <label for="name" class="block text-sm/6 font-medium text-gray-900">Name</label>
@@ -59,14 +103,7 @@
                             <input type="name" name="name" id="name" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                         </div>
                     </div>
-
-                    <div>
-                        <label for="username" class="block text-sm/6 font-medium text-gray-900">Username</label>
-                        <div class="mt-2">
-                            <input type="username" name="username" id="username" autocomplete="username" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-                        </div>
-                    </div>
-
+                    
                     <div>
                         <div class="flex items-center justify-between">
                             <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
@@ -101,7 +138,7 @@
 
                 <p class="mt-10 text-center text-sm/6 text-gray-500">
                     a member?
-                    <a href="http://localhost/casestudy/login.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Login now</a>
+                    <a href="../auth/login.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Login now</a>
                 </p>
             </div>
         </div>
