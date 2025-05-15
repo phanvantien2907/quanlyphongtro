@@ -92,38 +92,77 @@ if (isset($_GET['submit_search']) && $_GET['submit_search'] == 1) {
                             $room_images = !empty($room['images']) ? explode(',', $room['images']) : [];
                             $thumb = !empty($room_images[0]) ? trim($room_images[0]) : '../assets/images/default-room.jpg';
                         ?>
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                            <a href="room-detail.php?id=<?= $room['id'] ?>" class="block relative">
-                                <div class="aspect-w-16 aspect-h-9">
-                                    <img src="<?= htmlspecialchars($thumb) ?>" alt="<?= htmlspecialchars($room['title']) ?>" class="w-full h-48 object-cover">
-                                </div>
-                                <?php if ($room['approve'] == 1): ?>
-                                    <span class="absolute top-3 left-3 bg-green-500 text-white px-2 py-1 rounded-lg text-xs font-medium">Còn phòng</span>
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                            <div class="relative h-48">
+                                <img src="<?= htmlspecialchars($thumb) ?>" alt="<?= htmlspecialchars($room['title']) ?>" class="w-full h-full object-cover hover:scale-105 transition">                
+                                <?php if ($room['approve'] == 0): ?>
+                                    <span class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-3xl text-sm">Hết phòng</span>
                                 <?php else: ?>
-                                    <span class="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-lg text-xs font-medium">Hết phòng</span>
+                                    <span class="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-3xl text-sm">Còn trống</span>
                                 <?php endif; ?>
-                            </a>
+                                
+                                <span class="absolute top-2 left-2 bg-blue-500/80 text-white px-2 py-1 rounded-lg text-sm backdrop-blur-sm">
+                                    <?= htmlspecialchars($room['district_name']) ?>
+                                </span>
+                            </div>
+                            
                             <div class="p-4">
-                                <a href="room-detail.php?id=<?= $room['id'] ?>" class="block">
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition">
-                                        <?= htmlspecialchars($room['title']) ?>
-                                    </h3>
-                                </a>
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-red-600 font-bold"><?= number_format($room['price']) ?> đ/tháng</span>
-                                    <span class="text-sm text-gray-600"><?= htmlspecialchars($room['area']) ?> m²</span>
-                                </div>
-                                <div class="text-gray-600 text-sm mb-3 flex items-center line-clamp-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <h3 class="text-lg font-semibold mb-2 truncate"><?= htmlspecialchars($room['title']) ?></h3>
+                                <p class="text-red-600 font-bold mb-2"><?= number_format($room['price']) ?> đ/tháng</p>
+                                
+                                <p class="text-gray-600 mb-2 flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 flex-shrink-0 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
-                                    <?= htmlspecialchars($room['address']) ?>, <?= htmlspecialchars($room['district_name']) ?>
+                                    <span class="line-clamp-1"><?= htmlspecialchars($room['address']) ?></span>
+                                </p>
+                                
+                                <div class="flex justify-between items-center mb-3 text-sm text-gray-600">
+                                    <span class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+                                        </svg>
+                                        <?= htmlspecialchars($room['area']) ?> m²
+                                    </span>
+                                    
+                                    <span class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                        <?= number_format($room['count_view'] ?? 0) ?> lượt xem
+                                    </span>
                                 </div>
-                                <div class="flex justify-between items-center text-xs text-gray-500">
-                                    <span>Đăng bởi: <?= htmlspecialchars($room['owner_name']) ?></span>
-                                    <span><?= htmlspecialchars($room['count_view'] ?? 0) ?> lượt xem</span>
+                                
+                                <div class="flex justify-between items-center mb-3 text-sm text-gray-600 border-t pt-2">
+                                    <span class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                       <?= htmlspecialchars($room['owner_name']) ?>
+                                    </span>
+                                    
+                                    <span class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <?php 
+                                        $date = new DateTime($room['created_at']);
+                                        echo $date->format('d/m/Y');
+                                        ?>
+                                    </span>
                                 </div>
+                                
+                                <a href="room-detail.php?id=<?= $room['id'] ?>" class="block text-center bg-blue-600 text-white py-2 rounded-3xl hover:bg-blue-700 transition">
+                                    <span class="flex justify-center items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                        Xem chi tiết
+                                    </span>
+                                </a>
                             </div>
                         </div>
                     <?php endforeach; ?>
