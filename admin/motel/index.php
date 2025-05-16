@@ -66,7 +66,7 @@ $result = mysqli_fetch_all($sql, MYSQLI_ASSOC);
                                         />
                                         </div>
                                         </div>
-                                    </td>
+                                     </td>
                                         <td><?= number_format($item['giá_phòng']) ?></td>
                                         <?php if($item['tình_trạng_phòng'] == 1): ?>
                                         <td><span class="badge badge-success">Đã duyệt</span></td>
@@ -81,10 +81,13 @@ $result = mysqli_fetch_all($sql, MYSQLI_ASSOC);
                                         <a href="javascript:void(0)" onclick="copyID('<?= $item['id'] ?>')">
                                         Copy ID
                                         </a>
-                                     </li>
-                                        <li><a href="#">Xem</a></li>
-                                        <li><a href="#">Sửa</a></li>
-                                        <li><a href="#">Xóa</a></li>
+                                        </li>
+                                        <li><a href="detail.php?id=<?= $item['id'] ?>" onclick="openModal(<?= $item['id'] ?>); return false;">Xem</a></li>
+                                        <li> <a href="edit.php?id=<?= $item['id'] ?>" onclick="openEditModal(<?= $item['id'] ?>); return false;">Sửa</a></li>
+                                        <li><a href="delete.php?id=<?= $item['id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa phòng trọ này?')"> Xóa </a></li>
+                                        <li><a href="status_motel.php?id=<?= $item['id'] ?>"
+                                         onclick="return confirm('Bạn chắc chắn muốn <?=$item['tình_trạng_phòng'] == 1 ? 'ẩn' : 'hiện' ?> phòng trọ này?')"> 
+                                         <?=$item['tình_trạng_phòng'] == 1 ? 'Ẩn' : 'Hiện' ?> </a></li>
                                         </ul>
                                         </div>
                                         </td>
@@ -101,9 +104,42 @@ $result = mysqli_fetch_all($sql, MYSQLI_ASSOC);
            <?php include '../components/Footer.php'; ?>
            <div id="dynamic-toast" class="toast toast-top toast-end z-50 hidden"></div>
 
-
         <!-- Sidebar -->
        <?php include '../components/Sidebar.php'; ?>
     </div>
-</body>
+</body> 
+    <dialog id="modalDetail" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box">
+    <div id="modalContent">Đang tải dữ liệu...</div>
+    <div class="modal-action">
+    <form method="dialog">
+    <button class="btn">Đóng</button>
+    </form>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="modalEdit" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box">
+    <div id="modalEditContent">Đang tải dữ liệu...</div>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn">Đóng</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<script>
+function openModal(id) {
+fetch(`detail.php?id=${id}`)
+.then(res => res.text())
+.then(html => {
+modalContent.innerHTML = html;
+modalDetail.showModal();
+});
+}
+</script>
+
+
 </html>

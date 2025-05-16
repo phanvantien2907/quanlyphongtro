@@ -95,9 +95,16 @@ $districts_query = mysqli_query($conn, "SELECT district_id, name FROM districts"
 
         <!-- Hình ảnh -->
         <div class="form-control">
-          <label class="label"><span class="label-text font-medium text-gray-700">Ảnh</span></label>
-          <input type="text" name="images" placeholder="Nhập URL hình ảnh" class="input input-bordered rounded-xl w-full" required />
+        <label class="label">
+          <span class="label-text font-medium text-gray-700">Ảnh</span>
+        </label>
+        <div class="flex items-center gap-2">
+          <input id="imageInput" type="text" name="images"s placeholder="Chọn file hình ảnh" class="input input-bordered rounded-xl w-[85%] py-2 px-3 text-sm"   required />
+          <button type="button" onclick="openFileManager()" class="bg-[#2dd4bf] hover:bg-[#2cc5b2] text-white text-sm px-3 py-2 rounded-xl whitespace-nowrap cursor-pointer">
+            Chọn ảnh
+          </button>
         </div>
+      </div>
 
         <!-- Địa chỉ -->
         <div class="form-control">
@@ -153,4 +160,37 @@ $districts_query = mysqli_query($conn, "SELECT district_id, name FROM districts"
       </div>
     </form>
   </div>
+             
 </dialog>
+<dialog id="fileManagerModal" class="modal">
+  <div class="modal-box w-11/12 max-w-5xl p-0 h-[80vh]">
+    <div class="flex justify-between items-center p-4 border-b">
+      <h3 class="font-bold text-lg">Quản lý tập tin</h3>
+      <button type="button" onclick="closeFileManager()" class="btn btn-sm btn-circle btn-ghost">✕</button>
+    </div>
+    <div class="h-[calc(80vh-60px)]">
+      <iframe src="http://localhost/casestudy/admin/uploads/tinyfilemanager.php?p=admin%2Fuploads%2Fimage" frameborder="0" class="w-full h-full"></iframe>
+    </div>
+  </div>
+</dialog>   
+
+<script>
+  function openFileManager() {
+    document.getElementById('fileManagerModal').showModal();
+  }
+
+  function closeFileManager() {
+    document.getElementById('fileManagerModal').close();
+  }
+
+  window.addEventListener('message', function (e) {
+    if (e.data && typeof e.data === 'string' && e.data.includes('/casestudy/admin/uploads/image/')) {
+      document.getElementById('imageInput').value = e.data;
+      closeFileManager();
+    }
+  });
+
+  function selectFileFromManager(url) {
+    window.parent.postMessage(url, '*');
+}
+</script>
