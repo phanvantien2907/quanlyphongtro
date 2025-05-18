@@ -5,6 +5,18 @@ if(!isset($_SESSION['name'])) {
     header('Location: ..\page\index.php');
     exit();
 }
+$tong_so_phong = mysqli_query($conn, "SELECT count(*) as tổng_phòng_trọ FROM motel mt") or die("Lỗi truy vấn");
+$result_phong = mysqli_fetch_assoc($tong_so_phong);
+
+$tong_so_phong_dang_hoat_dong = mysqli_query($conn, "SELECT count(*) as tổng_số_phòng_đang_hoạt_động FROM motel mt WHERE mt.approve = 1") or die("Lỗi truy vấn");
+$result_phong_hoat_dong = mysqli_fetch_assoc($tong_so_phong_dang_hoat_dong);
+
+$tong_so_phong_cho_duyet = mysqli_query($conn, "SELECT count(*) as tổng_số_phòng_đang_chờ_duyệt FROM motel mt WHERE mt.approve = 0") or die("Lỗi truy vấn");
+$result_phong_cho_duyet = mysqli_fetch_assoc($tong_so_phong_cho_duyet);
+
+$tong_so_tai_khoan = mysqli_query($conn, "SELECT count(*) as tổng_số_người_dùng FROM users") or die("Lỗi truy vấn");
+$result_tai_khoan = mysqli_fetch_assoc($tong_so_tai_khoan);
+
 ?>
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
@@ -39,7 +51,7 @@ if(!isset($_SESSION['name'])) {
                             <div class="flex justify-between">
                                 <div>
                                     <div class="stat-title text-gray-500">Tổng phòng trọ</div>
-                                    <div class="stat-value text-3xl font-bold text-gray-800">1,249</div>
+                                    <div class="stat-value text-3xl font-bold text-gray-800"> <?=$result_phong['tổng_phòng_trọ'] ?> </div>
                                     <div class="stat-desc text-success">↗︎ 14% so với tháng trước</div>
                                 </div>
                                 <div class="stat-figure bg-blue-100 p-3 rounded-full">
@@ -57,7 +69,7 @@ if(!isset($_SESSION['name'])) {
                             <div class="flex justify-between">
                                 <div>
                                     <div class="stat-title text-gray-500">Phòng đang hoạt động</div>
-                                    <div class="stat-value text-3xl font-bold text-gray-800">845</div>
+                                    <div class="stat-value text-3xl font-bold text-gray-800"> <?=$result_phong_hoat_dong['tổng_số_phòng_đang_hoạt_động'] ?> </div>
                                     <div class="stat-desc text-success">↗︎ 7% so với tháng trước</div>
                                 </div>
                                 <div class="stat-figure bg-green-100 p-3 rounded-full">
@@ -75,7 +87,7 @@ if(!isset($_SESSION['name'])) {
                             <div class="flex justify-between">
                                 <div>
                                     <div class="stat-title text-gray-500">Chờ duyệt</div>
-                                    <div class="stat-value text-3xl font-bold text-gray-800">58</div>
+                                    <div class="stat-value text-3xl font-bold text-gray-800"><?=$result_phong_cho_duyet['tổng_số_phòng_đang_chờ_duyệt'] ?></div>
                                     <div class="stat-desc text-error">↘︎ 12% so với tháng trước</div>
                                 </div>
                                 <div class="stat-figure bg-yellow-100 p-3 rounded-full">
@@ -93,7 +105,7 @@ if(!isset($_SESSION['name'])) {
                             <div class="flex justify-between">
                                 <div>
                                     <div class="stat-title text-gray-500">Người dùng</div>
-                                    <div class="stat-value text-3xl font-bold text-gray-800">462</div>
+                                    <div class="stat-value text-3xl font-bold text-gray-800"><?=$result_tai_khoan['tổng_số_người_dùng'] ?></div>
                                     <div class="stat-desc text-success">↗︎ 23% so với tháng trước</div>
                                 </div>
                                 <div class="stat-figure bg-purple-100 p-3 rounded-full">

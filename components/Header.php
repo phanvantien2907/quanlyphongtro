@@ -4,11 +4,11 @@
 <nav class="bg-indigo-600 text-white p-4 shadow-md">
     <div class="container mx-auto flex justify-between items-center">
         <!-- Logo -->
-        <a href="index.php" class="text-xl font-bold">PhongTro.vn</a>
+        <a href="../page/index.php" class="text-xl font-bold">PhongTro.vn</a>
 
         <div class="hidden md:flex space-x-4">
-            <a href="index.php" class="hover:underline">Trang chủ</a>
-            <a href="../auth/my-favorites.php" class="hover:underline">Yêu thích</a>
+            <a href="../page/index.php" class="hover:underline">Trang chủ</a>
+            <a href="../page/post_new.php" class="hover:underline">Đăng bài</a>
             <a href="../auth/profile.php" class="hover:underline">Tài khoản</a>
             <a href="../auth/logout.php" class="hover:underline">Đăng xuất</a>
         </div>
@@ -23,7 +23,7 @@
 
     <div id="mobileMenu" class="hidden md:hidden flex flex-col items-center bg-indigo-700 py-2 space-y-2">
         <a href="index.php" class="hover:underline">Trang chủ</a>
-        <a href="../auth/my-favorites.php" class="hover:underline">Yêu thích</a>
+        <a href="../auth/my-favorites.php" class="hover:underline">Đăng bài</a>
         <a href="../auth/profile.php" class="hover:underline">Tài khoản</a>
         <a href="../auth/logout.php" class="hover:underline">Đăng xuất</a>
     </div>
