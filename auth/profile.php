@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="bg-gray-50 min-h-screen">
     <?php include '../components/Header.php'; ?>
-    
+
     <?php if (isset($_SESSION['toast_success'])): ?>
     <div class="toast toast-top toast-end z-50">
         <div class="alert alert-success shadow-lg">
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <?php unset($_SESSION['toast_success']); endif; ?>
-    
+
     <?php if (isset($_SESSION['toast_error'])): ?>
     <div class="toast toast-top toast-end z-50">
         <div class="alert alert-error shadow-lg">
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <?php unset($_SESSION['toast_error']); endif; ?>
-    
+
     <?php if (isset($_SESSION['toast_info'])): ?>
     <div class="toast toast-top toast-end z-50">
         <div class="alert alert-info shadow-lg">
@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <?php unset($_SESSION['toast_info']); endif; ?>
-    
+
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-4xl mx-auto">
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Tài Khoản Của Tôi</h1>
                 <div class="h-1 w-24 bg-gradient-to-r from-primary to-secondary mx-auto mt-4 rounded-full"></div>
             </div>
-            
+
             <!-- Profile Card -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
                 <!-- Cover Image & Profile Picture -->
@@ -136,12 +136,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Profile Info -->
                 <div class="pt-20 px-6 pb-8 text-center">
                     <h2 class="text-2xl font-bold text-gray-800"><?= $user['name'] ?></h2>
                     <p class="text-gray-500 mt-1"><?= $user['email'] ?></p>
-                    
+
                     <div class="flex flex-wrap justify-center gap-2 mt-4">
                         <div class="badge badge-primary"><?= $user['role'] ?></div>
                         <?php if($user['email_verified_at']): ?>
@@ -152,13 +152,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
                 <div class="p-6 border-b border-gray-100">
                     <h3 class="text-xl font-bold text-gray-800">Cài Đặt Tài Khoản</h3>
                     <p class="text-gray-500 text-sm mt-1">Cập nhật thông tin cá nhân của bạn</p>
                 </div>
-                
+
                 <form method="POST" class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="form-control">
@@ -212,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
-    
+
     <?php include '../components/Footer.php'; ?>
 </body>
 

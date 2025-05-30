@@ -4,11 +4,26 @@ include_once '../../config/connection.php';
 
 // check login
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $email =trim( $_POST['email']);
+    $password =trim($_POST['password']);
     $is_active = 1;
 
-    // query sql
+     if( empty($email)) {
+        $_SESSION['toast_error'] = "Email không được để trống";
+        header('Location: ..\auth\login.php');
+        exit();
+    }  elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['toast_error'] = "Email không hợp lệ";
+        header('Location: ..\auth\login.php');
+        exit();
+    }
+
+    if( empty($password)) {
+        $_SESSION['toast_error'] = "Mật khẩu không được để trống";
+        header('Location: ..\auth\login.php');
+        exit();
+    }
+
     $sql = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email' AND is_active = $is_active") or die("Lỗi truy vấn");
     $result = mysqli_fetch_assoc($sql);
 
@@ -28,9 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: ..\auth\login.php');
         exit();
     }
-    
+
     if (password_verify($password, $result['password'])) {
-        if ($result['role'] == 'admin') {
+        if ($result['role'] == 'admin' || $result['role'] == 'manager') {
             $_SESSION['user_id'] = $result['user_id'];
             $_SESSION['name'] = $result['name'];
             $_SESSION['role'] = $result['role'];

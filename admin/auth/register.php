@@ -2,14 +2,73 @@
 session_start();
 include_once '../../config/connection.php';
 
-// check login
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     $role = 'manager';
+     $email_verified_at = date('Y-m-d H:i:s');
+    $remember_token = bin2hex(random_bytes(16));
+    $created_at = date('Y-m-d H:i:s');
+    $updated_at = date('Y-m-d H:i:s');
     $is_active = 1;
+
+    if (empty($name)) {
+        $_SESSION['toast_error'] = "Tên không được để trống";
+        header('Location: register.php');
+        exit();
+        return;
+    } elseif (strlen($name) < 3) {
+        $_SESSION['toast_error'] = "Tên phải có ít nhất 3 ký tự";
+        header('Location: register.php');
+        exit();
+    } elseif (strlen($name) > 50) {
+        $_SESSION['toast_error'] = "Tên không được vượt quá 50 ký tự";
+        header('Location: register.php');
+        exit();
+    }
+
+    if (empty($email)) {
+        $_SESSION['toast_error'] = "Email không được để trống";
+        header('Location: register.php');
+        exit();
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['toast_error'] = "Email không hợp lệ";
+        header('Location: register.php');
+        exit();
+    } else {
+        $check_email = $conn->query("SELECT * FROM users WHERE email = '$email'");
+        if ($check_email->num_rows > 0) {
+            $_SESSION['toast_error'] = "Email <b>$email</b> đã tồn tại trong hệ thống";
+            header("Location: register.php");
+            exit();
+        }
+    }
+
+    if (empty($password)) {
+        $_SESSION['toast_error'] = "Mật khẩu không được để trống";
+        header('Location: register.php');
+        exit();
+    } elseif (strlen($password) < 3) {
+        $_SESSION['toast_error'] = "Mật khẩu  phải có ít nhất 3 ký tự";
+        header('Location: register.php');
+        exit();
+    } elseif (strlen($password) > 255) {
+        $_SESSION['toast_error'] = "Tên không được vượt quá 255 ký tự";
+        header('Location: register.php');
+        exit();
+    }
+
+    if (empty($confirm_password)) {
+        $_SESSION['toast_error'] = "Vui lòng xác nhận mật khẩu";
+        header('Location: register.php');
+        exit();
+    } elseif ($password != $confirm_password) {
+        $_SESSION['toast_error'] = "Mật khẩu không trùng khớp";
+        header('Location: register.php');
+        exit();
+    }
 
     if($password != $confirm_password) {
         $_SESSION['toast_error'] = "Mật khẩu không trùng khớp!";
@@ -17,17 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    $check_email = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email'") or die("Lỗi truy vấn: " . mysqli_error($conn));
-    $result_checkmail = mysqli_fetch_assoc($check_email);
-
-    if ($check_email->num_rows > 0) {
-        $_SESSION['toast_error'] = "Email <b>$email</b> đã tồn tại trong hệ thống!";
-        header('Location: ..\auth\register.php');
-        exit();
-    }
-
     $hashed_pasword = password_hash("password", PASSWORD_BCRYPT);
-    $query = mysqli_query($conn, "INSERT INTO users (name, password, email, role, is_active) VALUES ('$name', '$hashed_pasword', '$email', '$role',  1)") or die("Lỗi truy vấn: " . mysqli_error($conn));
+    $query = mysqli_query($conn, "INSERT INTO users (name, password, email, role, email_verified_at, remember_token, created_at, updated_at,  is_active) VALUES ('$name', '$hashed_pasword', '$email', '$role', '$email_verified_at', '$remember_token', '$created_at', '$updated_at',  1)") or die("Lỗi truy vấn: " . mysqli_error($conn));
     if ($query) {
         $_SESSION['toast_success'] = "Đăng ký tài khoản $email thành công!";
         header('Location: ..\auth\register.php');

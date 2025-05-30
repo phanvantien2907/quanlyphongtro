@@ -7,9 +7,25 @@ if (!isset($_SESSION['login_failed'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $email =trim( $_POST['email']);
+    $password =trim($_POST['password']);
     $is_active = 1;
+
+    if( empty($email)) {
+        $_SESSION['toast_error'] = "Email không được để trống";
+        header('Location: login.php');
+        exit();
+    }  elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['toast_error'] = "Email không hợp lệ";
+        header('Location: login.php');
+        exit();
+    }
+
+    if( empty($password)) {
+        $_SESSION['toast_error'] = "Mật khẩu không được để trống";
+        header('Location: login.php');
+        exit();
+    }
 
     if ($_SESSION['login_failed'] > 3) {
         if ($_POST['g-recaptcha-response']) {
@@ -31,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // query sql
     $sql = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email' AND is_active = $is_active") or die("Lỗi truy vấn");
     $result = mysqli_fetch_assoc($sql);
-
 
     if ($result['is_active'] == 0) {
         $_SESSION['error'] = "Tài khoản <b>$email</b> chưa được kích hoạt";
@@ -91,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
             <img class="mx-auto h-10 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
-            <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+            <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Đăng nhập tài khoản</h2>
         </div>
 
         <?php if (isset($_SESSION['error'])): ?>
@@ -106,19 +121,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div>
                     <label for="email" class="block text-sm/6 font-medium text-gray-900">Email</label>
                     <div class="mt-2">
-                        <input type="email" name="email" id="username" autocomplete="email" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        <input type="email" name="email" id="username" autocomplete="email" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                     </div>
                 </div>
 
                 <div>
                     <div class="flex items-center justify-between">
-                        <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
+                        <label for="password" class="block text-sm/6 font-medium text-gray-900">Mật khẩu</label>
                         <div class="text-sm">
-                            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Quên mật khẩu?</a>
                         </div>
                     </div>
                     <div class="mt-2">
-                        <input type="password" name="password" id="password" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        <input type="password" name="password" id="password" autocomplete="current-password" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                     </div>
                 </div>
                 <?php if ($_SESSION['login_failed'] > 3): ?>
@@ -132,8 +147,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
 
             <p class="mt-10 text-center text-sm/6 text-gray-500">
-                Not a member?
-                <a href="../auth/register.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
+                Bạn chưa có tài khoản?
+                <a href="../auth/register.php" class="font-semibold text-indigo-600 hover:text-indigo-500 ms-0">Đăng ký tài khoản</a>
             </p>
         </div>
     </div>
